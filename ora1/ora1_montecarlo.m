@@ -1,6 +1,6 @@
 P = 0.5; % chance to hit
-SHOTCOUNT = 100; % 100 SHOTCOUNT in a game as stated in problem description
-TESTCOUNT = 10e6; % how many games to play before evaulation
+SHOTCOUNT = 100; % 100 shots in a game as stated in problem description
+TESTCOUNT = 1e6; % how many games to simulate before evaulation
 HITS = 5; % how many hits are expected (= 5 in problem description)
 
 % generate the games
@@ -15,9 +15,6 @@ end
 solution = sum(results) / TESTCOUNT;
 
 function gameResults = playgames(numOfGames, numOfShots, chanceToHit)
-% numOfShots: self-explanatory
-% chanceToHit: chance of a single single shot to hit
-% numOfGames: how many games the function should simulate.
 % gameResults: n*m logical array. true represents a hit
 % false a miss. m is the number of shots within a game n is the number of
 % games
@@ -26,12 +23,16 @@ end
 
 function result = evaluategame(gameResult, numOfReqConsecutiveHits)
 % checks a single game against the criteria (number of consecutive hits)
+% numOfReqConsecutiveHits: how many consecutive hits required for the criteria.
+% If the criteria is fulfilled at least once (multiple times allowed as well) 
+% then game is passed
     result = any( ...
-        arrayfun(getEvaluator(numOfReqConsecutiveHits), gameResult));
+        arrayfun(getevaluator(numOfReqConsecutiveHits), gameResult));
 end
 
-function evalFun = getEvaluator(numOfReqConsecutiveHits)
-% closure for checking consecutive hits
+function evalFun = getevaluator(numOfReqConsecutiveHits)
+% closure for checking consecutive hits. The returned function returns true
+% if there were numOfReqConsecutiveHits hits in a row.
     hitStreak = 0;
     function ret = aggregator(in)
         ret = 0;
