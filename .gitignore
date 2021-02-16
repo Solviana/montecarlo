@@ -1,2 +1,6 @@
 # Pictures / lecture notes
 *.png
+# matlab
+*.asv
+# published files
+*/html/*

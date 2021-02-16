@@ -22,8 +22,8 @@ function gameResults = playgames(numOfGames, numOfShots, chanceToHit)
 end
 
 function result = evaluategame(gameResult, numOfReqConsecutiveHits)
-% checks a single game against the criteria (number of consecutive hits)
-% numOfReqConsecutiveHits: how many consecutive hits required for the criteria.
+% checks a single game
+% numOfReqConsecutiveHits: how many consecutive hits required to pass the criteria.
 % If the criteria is fulfilled at least once (multiple times allowed as well) 
 % then game is passed
     result = any( ...
