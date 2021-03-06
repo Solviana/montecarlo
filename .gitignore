@@ -4,3 +4,5 @@
 *.asv
 # published files
 */html/*
+# Recordings
+*.mp3
