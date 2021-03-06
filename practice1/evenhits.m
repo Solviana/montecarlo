@@ -1,25 +1,25 @@
-testProbabilityOfEvenHit(21,5000)
+testprobabilityofevenhit(21,5000)
 
-function testProbabilityOfEvenHit(nShot, nSim)
+function testprobabilityofevenhit(nShot, nSim)
     pHit = 0:0.01:1; 
     pEvenanalytical = arrayfun(@(x) getprobabilityofevenhit_analytical(nShot, x), pHit);
     pEvenMonteCarlo = arrayfun(@(x) getprobabilityofevenhit_montecarlo(nShot, x, nSim), pHit);
     plot(pHit, pEvenanalytical, pHit, pEvenMonteCarlo);
     legend('Analytic solution', 'Monte Carlo method')
     xlabel('chance to hit')
-    ylabel('chance to get even shots')
+    ylabel('chance to get even number of hits')
 end
 
 
 function pEven = getprobabilityofevenhit_analytical (nShot, pHit)
-    % sum up Ps of each even hitcount
+    % sum up probabilities of each possible even hitcount
     possibleHits = 0:2:nShot;
     pEven = sum(...
         arrayfun(@(x) getprobabilityofhits_analytical(nShot,pHit,x), possibleHits));
 end
 
 function p = getprobabilityofhits_analytical(nShot, pHit, nHit)
-    % binomial dist
+    % binomial dist, returns the chance of hitting exactly nHit times
     p = nchoosek(nShot,nHit) * pHit.^nHit * (1-pHit).^(nShot - nHit);
 end
     
