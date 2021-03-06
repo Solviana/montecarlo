@@ -1,9 +1,18 @@
-P = 0.5; % chance to hit
-SHOTCOUNT = 100; % 100 shots in a game as stated in problem description
-TESTCOUNT = 1e6; % how many games to simulate before evaulation
-HITS = 5; % how many hits are expected (= 5 in problem description)
+[seqs, pSeqs] = testprobabilityofsequence(50,0.5,5e4)
 
-getprobabilityofsequence(SHOTCOUNT,HITS,P,TESTCOUNT)
+function [seqs, pSeqs] = testprobabilityofsequence(nFlip, pHead, nSim)
+    % THIS CAN TAKE SOME TIME 
+    % to decrease runtime:
+    % - change the step in 'seqs' to something bigger
+    % - reduce 'nSim'
+    % - reduce 'nFlip'
+    seqs = 1:ceil(nFlip/50):nFlip;
+    pSeqs = arrayfun(...
+        @(x)getprobabilityofsequence(nFlip, x, pHead, nSim),seqs);
+    plot(seqs, pSeqs);
+    xlabel("length of hit/miss streak")
+    ylabel("chance of streak")
+end
 
 function pSeq = getprobabilityofsequence(nFlip, lSeq, pHead, nSim)
     % generate the games
@@ -22,7 +31,7 @@ function gameResults = playgames(numOfGames, numOfShots, chanceToHit)
 % gameResults: n*m logical array. true represents a hit
 % false a miss. m is the number of shots within a game n is the number of
 % games
-    gameResults = rand([numOfGames, numOfShots]) > chanceToHit;
+    gameResults = rand([numOfGames, numOfShots]) < chanceToHit;
 end
 
 function result = evaluategame(gameResult, numOfReqConsecutiveHits)
@@ -40,9 +49,11 @@ function evalFun = getevaluator(numOfReqConsecutiveHits)
     missStreak = 0;
     function ret = aggregator(in)
         ret = 0;
+        % hitstreak is exactly numOfReqConsecutiveHits long -> return true
         if hitStreak == numOfReqConsecutiveHits && in == 0
             ret = 1;
             hitStreak = 0;
+        % missstreak is exactly numOfReqConsecutiveHits long -> return true
         elseif missStreak == numOfReqConsecutiveHits && in == 1
             ret = 1;
             missStreak = 0;
