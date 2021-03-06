@@ -15,7 +15,7 @@ function pSeq = getprobabilityofsequence(nFlip, lSeq, pHead, nSim)
     end
     % results is a boolean array -> sum returns the number of games that passed
     % the criteria
-    pSeq = sum(results) / TESTCOUNT;
+    pSeq = sum(results) / nSim;
 end
 
 function gameResults = playgames(numOfGames, numOfShots, chanceToHit)
@@ -27,7 +27,7 @@ end
 
 function result = evaluategame(gameResult, numOfReqConsecutiveHits)
 % checks a single game
-% numOfReqConsecutiveHits: how many consecutive hits required to pass the criteria.
+% numOfReqConsecutiveHits: how many consecutive hits/misses required to pass 
 % If the criteria is fulfilled at least once (multiple times allowed as well) 
 % then game is passed
     result = any( ...
@@ -35,16 +35,20 @@ function result = evaluategame(gameResult, numOfReqConsecutiveHits)
 end
 
 function evalFun = getevaluator(numOfReqConsecutiveHits)
-% closure for checking consecutive hits. 
+% closure for checking consecutive hits/misses; 
     hitStreak = 0;
     missStreak = 0;
     function ret = aggregator(in)
         ret = 0;
-        if hitStreak == numOfReqConsecutiveHits || missStreak == numOfReqConsecutiveHits
+        if hitStreak == numOfReqConsecutiveHits && in == 0
             ret = 1;
+            hitStreak = 0;
+        elseif missStreak == numOfReqConsecutiveHits && in == 1
+            ret = 1;
+            missStreak = 0;
         elseif in
             hitStreak = hitStreak + 1;
-            missStreak = 0
+            missStreak = 0;
         else
             missStreak = missStreak + 1;
             hitStreak = 0;
